@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Yiwei Rui</title>
+<meta name="description" content="Yiwei Rui, Honours student in Artificial Intelligence at Victoria University of Wellington, working on 3D-aware sketch generation and computer vision.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Spectral:wght@500;600&display=swap" rel="stylesheet">
+
+<!-- Private visit counter. Dashboard: https://ruiyiwe.goatcounter.com (change "ruiyiwe" to your GoatCounter code) -->
+<script data-goatcounter="https://ruiyiwe.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+
+<style>
+  :root {
+    --paper: #F6F7F9;
+    --ink: #18202C;
+    --graphite: #5B6472;
+    --rule: #DCE0E6;
+    --accent: #1F4FA8;
+    --accent-soft: #E6EDF9;
+    --serif: "Spectral", Georgia, "Times New Roman", serif;
+    --sans: "Public Sans", -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    box-sizing: border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #12161D;
+      --ink: #E7EAF0;
+      --graphite: #9AA3B2;
+      --rule: #2A313C;
+      --accent: #8FB0F0;
+      --accent-soft: #1C2636;
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #12161D; --ink: #E7EAF0; --graphite: #9AA3B2;
+    --rule: #2A313C; --accent: #8FB0F0; --accent-soft: #1C2636;
+  }
+  *, *::before, *::after { box-sizing: inherit; }
+  html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 1.0625rem;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  img { max-width: 100%; }
+  a { color: var(--accent); text-underline-offset: 0.18em; text-decoration-thickness: 1px; }
+  a:hover { text-decoration-thickness: 2px; }
+  a:focus-visible, canvas:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
+
+  .wrap { max-width: 68rem; margin: 0 auto; padding: 0 1.5rem; }
+
+  /* Hero */
+  .hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+    gap: 2.5rem;
+    align-items: center;
+    padding: 4.5rem 0 3.5rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  h1 {
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: clamp(2.6rem, 6vw, 4rem);
+    line-height: 1.02;
+    letter-spacing: -0.015em;
+    margin: 0 0 1.25rem;
+  }
+  .lede { font-size: 1.15rem; max-width: 34rem; margin: 0 0 1.5rem; }
+  .links { display: flex; flex-wrap: wrap; gap: 0.6rem 1.4rem; margin: 0; padding: 0; list-style: none; font-weight: 500; }
+
+  .sketch { margin: 0; }
+  .sketch canvas {
+    display: block;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    max-width: 26rem;
+    margin-left: auto;
+    cursor: grab;
+    touch-action: none;
+  }
+  .sketch canvas:active { cursor: grabbing; }
+  .sketch figcaption {
+    max-width: 26rem;
+    margin-left: auto;
+    color: var(--graphite);
+    font-size: 0.875rem;
+    line-height: 1.45;
+  }
+
+  /* Sections */
+  section { display: grid; grid-template-columns: 11rem minmax(0, 1fr); gap: 2rem; padding: 3rem 0; border-bottom: 1px solid var(--rule); }
+  section:last-of-type { border-bottom: 0; }
+  h2 { font-family: var(--serif); font-weight: 500; font-size: 1.45rem; margin: 0; line-height: 1.3; }
+  .body { max-width: 44rem; }
+  .body > p:first-child { margin-top: 0; }
+
+  .entry { padding-bottom: 2rem; }
+  .entry + .entry { padding-top: 2rem; border-top: 1px solid var(--rule); }
+  .entry:last-child { padding-bottom: 0; }
+  .entry-head { display: flex; justify-content: space-between; gap: 1rem; align-items: baseline; }
+  h3 { font-size: 1.1rem; font-weight: 600; line-height: 1.35; margin: 0; }
+  .year { color: var(--graphite); font-size: 0.95rem; white-space: nowrap; }
+  .meta { color: var(--graphite); margin: 0.25rem 0 0.8rem; font-size: 0.95rem; }
+  .entry p { margin: 0 0 0.6rem; }
+  .result {
+    background: var(--accent-soft);
+    border-left: 3px solid var(--accent);
+    padding: 0.6rem 0.9rem;
+    margin: 0.9rem 0 0.6rem;
+    font-size: 0.97rem;
+  }
+  .status { display: inline-block; font-size: 0.85rem; font-weight: 600; color: var(--accent); margin-bottom: 0.5rem; }
+
+  .facts { margin: 0; padding: 0; list-style: none; }
+  .facts li { padding: 0.35rem 0; }
+  .skills { display: grid; grid-template-columns: 11rem minmax(0, 1fr); gap: 0.4rem 1.25rem; margin: 0; }
+  .skills dt { color: var(--graphite); }
+  .skills dd { margin: 0; }
+
+  footer { color: var(--graphite); font-size: 0.875rem; padding: 2rem 0 3rem; border-top: 1px solid var(--rule); }
+
+  @media (max-width: 760px) {
+    .hero { grid-template-columns: 1fr; padding-top: 3rem; gap: 1.5rem; }
+    .sketch canvas, .sketch figcaption { margin-left: 0; max-width: 20rem; }
+    section { grid-template-columns: 1fr; gap: 1rem; padding: 2.25rem 0; }
+    .skills { grid-template-columns: 1fr; gap: 0 0; }
+    .skills dd { margin-bottom: 0.6rem; }
+    .entry-head { flex-direction: column; gap: 0.1rem; }
+  }
+</style>
+</head>
+<body>
+<main class="wrap">
+
+  <header class="hero">
+    <div>
+      <h1>Yiwei Rui</h1>
+      <p class="lede">
+        I'm an Honours student in Artificial Intelligence at Victoria University of Wellington.
+        I work on generative computer vision, currently on sketches that stay consistent
+        when you look at them from any angle.
+      </p>
+      <ul class="links">
+        <li><a href="mailto:ruiyiwei1@gmail.com">Email</a></li>
+        <li><a href="cv.pdf">CV (PDF)</a></li>
+        <li><a href="https://github.com/ruiyiwe">GitHub</a></li>
+        <li><a href="https://drive.google.com/file/d/13OhWTMXXa_3an3egeEm4nAxP0J4ZKVAd/view?usp=sharing">Transcript</a></li>
+      </ul>
+    </div>
+    <figure class="sketch">
+      <canvas id="sketch" tabindex="0" aria-label="A vase drawn from 3D Bézier strokes. Drag, or use the arrow keys, to rotate it."></canvas>
+      <figcaption>One set of 3D Bézier strokes, rendered from every viewpoint. Drag to rotate.</figcaption>
+    </figure>
+  </header>
+
+  <section id="research">
+    <h2>Research</h2>
+    <div class="body">
+      <p>
+        I'm interested in computer vision on both the generative and the discriminative side.
+        On the generative side: image synthesis with diffusion models, GANs and VAEs,
+        guidance from vision-language models such as CLIP, and 3D-aware generation and style
+        transfer. On the discriminative side: object detection and semantic segmentation with
+        ViT- and DETR-style architectures.
+      </p>
+    </div>
+  </section>
+
+  <section id="projects">
+    <h2>Projects</h2>
+    <div class="body">
+
+      <article class="entry">
+        <div class="entry-head">
+          <h3>Deep 3D-aware sketch generation with multi-view consistency and style transfer</h3>
+          <span class="year">2026</span>
+        </div>
+        <p class="meta">Honours thesis, supervised by Dr. Fanglue Zhang and Dr. Junhong Zhao</p>
+        <span class="status">In progress</span>
+        <p>
+          Existing sketch generation methods work in 2D, so the same subject drawn from two
+          angles rarely looks like the same drawing. I represent a sketch as a set of 3D Bézier
+          strokes and optimise them jointly across several viewpoints with differentiable
+          rendering, so one underlying geometry explains every view. Perceptual and semantic
+          objectives (LPIPS and CLIP-based losses) drive visual quality and style.
+        </p>
+      </article>
+
+      <article class="entry">
+        <div class="entry-head">
+          <h3>Object-based DETR-like model for flood area segmentation</h3>
+          <span class="year">2025</span>
+        </div>
+        <p class="meta">Course project, supervised by Prof. Bastiaan Kleijn. <a href="https://github.com/ruiyiwe/detr-flood-segmentation">Code</a></p>
+        <p>
+          Pixel-level segmentation models tend to blur flood boundaries and miss scattered,
+          irregular water regions. I adapted DETR's object queries for dense prediction:
+          a ResNet-18 backbone, a lightweight Transformer encoder-decoder, and a redesigned
+          mask head that builds per-class masks directly from the learned queries.
+          Trained and compared with a ViT baseline on FloodNet under identical conditions.
+        </p>
+        <p class="result">0.539 mIoU against 0.555 for ViT: slightly lower overall, with visibly sharper boundaries between flood regions.</p>
+      </article>
+
+      <article class="entry">
+        <div class="entry-head">
+          <h3>Selection operators in genetic programming</h3>
+          <span class="year">2025</span>
+        </div>
+        <p class="meta">Summer Research Scholarship, supervised by Prof. Bing Xue, Prof. Mengjie Zhang and Dr. Qi Chen</p>
+        <p>
+          Compared ε-lexicase, down-sampled tournament and Pareto tournament selection on
+          synthetic (Friedman 1–3) and real-world symbolic regression benchmarks.
+          Down-sampled tournaments favour exploitation, ε-lexicase preserves rare solution
+          behaviours, and Pareto tournaments favour simpler, more efficient programs, which gives
+          practical guidance for choosing a selection method from dataset characteristics.
+        </p>
+      </article>
+
+    </div>
+  </section>
+
+  <section id="education">
+    <h2>Education</h2>
+    <div class="body">
+      <article class="entry">
+        <div class="entry-head">
+          <h3>Victoria University of Wellington</h3>
+          <span class="year">2023 to 2026</span>
+        </div>
+        <ul class="facts">
+          <li>BSc (Honours) in Artificial Intelligence, 2026, in progress. WAM 8.7 / 9.0</li>
+          <li>BSc in Artificial Intelligence and Computer Science, 2023 to 2025. WAM 8.63 / 9.0</li>
+          <li>Dean's List for Academic Excellence, 2023, 2024 and 2025</li>
+          <li>Summer Research Scholarship, 2025</li>
+          <li>A+ in Computer Vision and Image/Video Processing, Natural Language Processing, AI Project, Evolutionary Computation and Learning, and Image-based Graphics</li>
+        </ul>
+      </article>
+    </div>
+  </section>
+
+  <section id="skills">
+    <h2>Skills</h2>
+    <div class="body">
+      <dl class="skills">
+        <dt>Languages</dt><dd>Python, C++, Java, SQL</dd>
+        <dt>Frameworks</dt><dd>PyTorch, TensorFlow, scikit-learn, NumPy, Pandas</dd>
+        <dt>Vision</dt><dd>Segmentation, detection, image generation, 3D vision, differentiable rendering</dd>
+        <dt>Tools</dt><dd>CUDA, Linux, Git, Apache Spark, Hadoop</dd>
+      </dl>
+    </div>
+  </section>
+
+</main>
+<footer class="wrap">Yiwei Rui, Wellington, New Zealand. Updated September 2026.</footer>
+
+<script>
+(function () {
+  const canvas = document.getElementById('sketch');
+  const ctx = canvas.getContext('2d');
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Seeded random so the "hand-drawn" wobble is part of the geometry, identical in every view.
+  let seed = 7;
+  const rand = () => { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; };
+  const jitter = (p, s) => [p[0] + (rand() - 0.5) * s, p[1] + (rand() - 0.5) * s, p[2] + (rand() - 0.5) * s];
+
+  const strokes = [];
+  // Meridians: a vase profile swept around the vertical axis.
+  const profile = [[0.35, -1], [0.95, -0.4], [0.18, 0.4], [0.45, 1]];
+  const meridians = 7;
+  for (let i = 0; i < meridians; i++) {
+    const a = (i / meridians) * Math.PI * 2 + 0.2;
+    strokes.push(profile.map(([r, y]) => jitter([r * Math.cos(a), y, r * Math.sin(a)], 0.05)));
+  }
+  // Rings: circles made of four cubic Béziers each.
+  const k = 0.5523;
+  [[0.35, -1], [0.5625, -0.52], [0.5125, 0], [0.45, 1]].forEach(([r, y]) => {
+    const pts = [[r, 0], [0, r], [-r, 0], [0, -r]];
+    for (let q = 0; q < 4; q++) {
+      const p0 = pts[q], p3 = pts[(q + 1) % 4];
+      const t0 = [-p0[1], p0[0]], t3 = [p3[1], -p3[0]];
+      const c = [
+        [p0[0], y, p0[1]],
+        [p0[0] + t0[0] * k, y, p0[1] + t0[1] * k],
+        [p3[0] + t3[0] * k, y, p3[1] + t3[1] * k],
+        [p3[0], y, p3[1]]
+      ].map(p => jitter(p, 0.03));
+      strokes.push(c);
+    }
+  });
+
+  const bez = (c, t) => {
+    const u = 1 - t, a = u * u * u, b = 3 * u * u * t, d = 3 * u * t * t, e = t * t * t;
+    return [0, 1, 2].map(i => a * c[0][i] + b * c[1][i] + d * c[2][i] + e * c[3][i]);
+  };
+
+  let theta = 0.6, tilt = 0.38, w = 0, h = 0, dpr = 1;
+
+  function resize() {
+    dpr = window.devicePixelRatio || 1;
+    const rect = canvas.getBoundingClientRect();
+    w = rect.width; h = rect.height;
+    canvas.width = Math.round(w * dpr); canvas.height = Math.round(h * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    draw();
+  }
+
+  function project(p) {
+    const ct = Math.cos(theta), st = Math.sin(theta);
+    let x = p[0] * ct + p[2] * st, z = -p[0] * st + p[2] * ct, y = p[1];
+    const cx = Math.cos(tilt), sx = Math.sin(tilt);
+    const y2 = y * cx - z * sx, z2 = y * sx + z * cx;
+    const dist = 4.2, s = (Math.min(w, h) * 0.36) * dist / (dist + z2);
+    return [w / 2 + x * s, h / 2 - y2 * s, z2];
+  }
+
+  function draw() {
+    if (!w) return;
+    const style = getComputedStyle(document.documentElement);
+    const ink = style.getPropertyValue('--ink').trim();
+    ctx.clearRect(0, 0, w, h);
+    ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+    ctx.strokeStyle = ink;
+    const steps = 28;
+    strokes.forEach(c => {
+      let prev = project(bez(c, 0));
+      for (let i = 1; i <= steps; i++) {
+        const cur = project(bez(c, i / steps));
+        const depth = (prev[2] + cur[2]) / 2; // -1 near, +1 far
+        const near = Math.max(0, Math.min(1, (1 - depth) / 2));
+        ctx.globalAlpha = 0.25 + 0.7 * near;
+        ctx.lineWidth = 0.7 + 1.6 * near;
+        ctx.beginPath(); ctx.moveTo(prev[0], prev[1]); ctx.lineTo(cur[0], cur[1]); ctx.stroke();
+        prev = cur;
+      }
+    });
+    ctx.globalAlpha = 1;
+  }
+
+  // Interaction
+  let dragging = false, lastX = 0, lastY = 0, idleUntil = 0;
+  canvas.addEventListener('pointerdown', e => {
+    dragging = true; lastX = e.clientX; lastY = e.clientY;
+    canvas.setPointerCapture(e.pointerId);
+  });
+  canvas.addEventListener('pointermove', e => {
+    if (!dragging) return;
+    theta += (e.clientX - lastX) * 0.01;
+    tilt = Math.max(-1.1, Math.min(1.1, tilt + (e.clientY - lastY) * 0.006));
+    lastX = e.clientX; lastY = e.clientY;
+    idleUntil = performance.now() + 2500;
+    draw();
+  });
+  const end = () => { dragging = false; };
+  canvas.addEventListener('pointerup', end);
+  canvas.addEventListener('pointercancel', end);
+  canvas.addEventListener('keydown', e => {
+    const moves = { ArrowLeft: [-0.15, 0], ArrowRight: [0.15, 0], ArrowUp: [0, -0.1], ArrowDown: [0, 0.1] };
+    if (!moves[e.key]) return;
+    e.preventDefault();
+    theta += moves[e.key][0];
+    tilt = Math.max(-1.1, Math.min(1.1, tilt + moves[e.key][1]));
+    idleUntil = performance.now() + 2500;
+    draw();
+  });
+
+  let last = performance.now();
+  function tick(now) {
+    const dt = Math.min(50, now - last); last = now;
+    if (!dragging && now > idleUntil) { theta += dt * 0.00035; draw(); }
+    requestAnimationFrame(tick);
+  }
+
+  new ResizeObserver(resize).observe(canvas);
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', draw);
+  resize();
+  if (!reduceMotion) requestAnimationFrame(tick);
+})();
+</script>
+</body>
+</html>
